@@ -3,6 +3,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -11,6 +12,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 // const uri = 'mongodb+srv://rohitwagh0801:TH8myxnP0Z9MQJ1E@cluster0.lurrouo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 // console.log(process.env.MONGO_URI);
@@ -83,6 +85,15 @@ app.post('/signin', async (req, res)=>{
     }
 
     if(bcrypt.compare(password , userObj.password)){
+
+        const token = jwt.sign({
+
+            userId:userObj._id , name:userObj.name , email:email , type:'user'
+
+        }, process.env.JWT_SECRET_KEY , {expiresIn:'2h'})
+
+        res.cookie('token', token , {maxAge: 2*60*60*1000})
+
         res.render('home')
     }
 
