@@ -37,8 +37,19 @@ db.on('error' , (error)=>{
 const user = require('./modules/user');
 
 app.get('/', (req, res) => {
+    
+    const { token } = req.cookies;
+    if(token){
+        const tokenData = jwt.verify(token , process.env.JWT_SECRET_KEY)
 
-    res.status(200).json({ message: 'hello world'});
+        if(tokenData.type == 'user'){
+            res.render('home')  // next
+    } 
+    }else{
+        res.redirect('/signin')
+    }
+
+    res.status(200).json({ message: 'hello world'}); // first 
 
 })
 
@@ -93,8 +104,9 @@ app.post('/signin', async (req, res)=>{
         }, process.env.JWT_SECRET_KEY , {expiresIn:'2h'})
 
         res.cookie('token', token , {maxAge: 2*60*60*1000})
-
-        res.render('home')
+        
+        res.redirect('/')
+        // res.render('home')
     }
 
 })
