@@ -42,14 +42,14 @@ app.get('/', (req, res) => {
     if(token){
         const tokenData = jwt.verify(token , process.env.JWT_SECRET_KEY)
 
-        if(tokenData.type == 'user' || tokenData.password == password){
+        if(tokenData.type == 'user'){
             res.render('home')  // next
     } 
     }else{
         res.redirect('/signup')
     }
 
-    // res.status(200).json({ message: 'hello world'}); // first 
+    res.status(200).json({ message: 'hello world'}); // first 
 
 })
 
@@ -106,8 +106,8 @@ app.post('/signin', async (req, res)=>{
 
         res.cookie('token', token , {maxAge: 2*60*60*1000})
         
-        res.redirect('/')
-        // res.render('home')
+        res.redirect('/') 
+        // res.render('home')  // first 
     } 
     } catch(error){
         console.log(error)
