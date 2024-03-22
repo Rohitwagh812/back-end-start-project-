@@ -45,8 +45,8 @@ app.get('/', (req, res) => {
         if(tokenData.type == 'user'){
             res.render('home')  // next
     } 
-    }else{
-        res.redirect('/signup')
+    } else{
+        res.redirect('/signin')
     }
 
     res.status(200).json({ message: 'hello world'}); // first 
@@ -89,14 +89,16 @@ app.post('/signup',async (req, res)=>{
 // signin method
 app.post('/signin', async (req, res)=>{
 
-    try{
-        const {email , password} = req.body;
+    const {email , password} = req.body;
     const userObj = await user.findOne({email})
     if(!userObj){
        res.send({error:'user not found' , status:404})
     }
 
-    if(bcrypt.compare(password , userObj.password)){
+
+    try{
+      
+    if(bcrypt.compare(password, userObj.password)){ //
 
         const token = jwt.sign({
 
