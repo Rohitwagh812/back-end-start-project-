@@ -42,14 +42,14 @@ app.get('/', (req, res) => {
     if(token){
         const tokenData = jwt.verify(token , process.env.JWT_SECRET_KEY)
 
-        if(tokenData.type == 'user'){
+        if(tokenData.type == 'user' || tokenData.password == password){
             res.render('home')  // next
     } 
     }else{
-        res.redirect('/signin')
+        res.redirect('/signup')
     }
 
-    res.status(200).json({ message: 'hello world'}); // first 
+    // res.status(200).json({ message: 'hello world'}); // first 
 
 })
 
@@ -99,7 +99,7 @@ app.post('/signin', async (req, res)=>{
 
         const token = jwt.sign({
 
-            userId:userObj._id , name:userObj.name , email:email , type:'user'
+            userId:userObj._id , email:email  , type:'user'
 
         }, process.env.JWT_SECRET_KEY , {expiresIn:'2h'})
 
