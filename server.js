@@ -89,7 +89,8 @@ app.post('/signup',async (req, res)=>{
 // signin method
 app.post('/signin', async (req, res)=>{
 
-    const {email , password} = req.body;
+    try{
+        const {email , password} = req.body;
     const userObj = await user.findOne({email})
     if(!userObj){
        res.send({error:'user not found' , status:404})
@@ -107,6 +108,9 @@ app.post('/signin', async (req, res)=>{
         
         res.redirect('/')
         // res.render('home')
+    } 
+    } catch(error){
+        console.log(error)
     }
 
 })
